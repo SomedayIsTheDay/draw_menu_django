@@ -2,11 +2,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% draw_menu "main_menu" as menu %}
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu {
+        {{ menu.styles }}
+        }
+
+        .logo {
+        {{ menu.logo.styles }}
+        }
+
+        {% for item in menu.items %}
+            {% for style in item.styles %}
+                .{{ item.text|lower }}{{ style }}
+            {% endfor %}
+        {% endfor %}
+    </style>
 </head>
 <body>
-{% draw_menu %}
-<div><p>{{ title }}</p></div>
+<div class="menu">
+    <img src="{{ menu.logo.image }}" class="logo" alt="logo">
+    {% for item in menu.items %}
+        <a href="{{ item.url }}" class="{{ item.text|lower }}">{{ item.text }}</a>
+    {% endfor %}
+</div>
+<div><p style="font-family: Algerian, sans-serif">{{ title }}</p></div>
 </body>
 </html>

@@ -1,24 +1,30 @@
 from django.db import models
 
 
-class Logo(models.Model):
-    name = models.CharField(max_length=32)
-    logo = models.ImageField(blank=True)
+class MenuGroup(models.Model):
+    name = models.CharField(max_length=50)
+    styles = models.TextField()
 
     def __str__(self):
         return self.name
 
 
-class TextElements(models.Model):
-    font_family = models.CharField(max_length=64)
-    font_family_generic = models.CharField(max_length=32)
-    font_size = models.IntegerField()
-    color = models.CharField(max_length=32)
+class MenuItem(models.Model):
+    menu = models.ForeignKey(
+        MenuGroup, on_delete=models.CASCADE, related_name="menu_items"
+    )
+    text = models.CharField(max_length=50)
+    url = models.TextField()
+    styles = models.TextField()
+
+    def __str__(self):
+        return self.text
 
 
-class Menu(models.Model):
-    name = models.CharField(max_length=32)
-    logo = models.OneToOneField(Logo, on_delete=models.CASCADE)
-    elements = models.ForeignKey(TextElements, on_delete=models.CASCADE)
-    background_color = models.CharField(max_length=32)
-    padding = models.IntegerField()
+class Logo(models.Model):
+    menu = models.ForeignKey(MenuGroup, on_delete=models.CASCADE, related_name="logo")
+    image = models.ImageField(upload_to="logos")
+    styles = models.TextField()
+
+    def __str__(self):
+        return f"{self.menu} logo"
