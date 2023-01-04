@@ -10,29 +10,15 @@
             margin: 0;
             padding: 0;
         }
-
-        .menu {
-        {{ menu.styles }}
-        }
-
-        .logo {
-        {{ menu.logo.styles }}
-        }
-
-        {% for item in menu.items %}
-            {% for style in item.styles %}
-                .{{ item.text|lower }}{{ style }}
-            {% endfor %}
+        {% for style in menu.styles %}
+            {{ style }}
         {% endfor %}
     </style>
 </head>
 <body>
-<div class="menu">
-    <img src="{{ menu.logo.image }}" class="logo" alt="logo">
-    {% for item in menu.items %}
-        <a href="{{ item.url }}" class="{{ item.text|lower }}">{{ item.text }}</a>
-    {% endfor %}
-</div>
+{% autoescape on %}
+{{ menu.menu|safe }}
+{% endautoescape %}
 <div><p style="font-family: Algerian, sans-serif">{{ title }}</p></div>
 </body>
 </html>

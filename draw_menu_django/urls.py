@@ -19,7 +19,11 @@ import mainapp.views as mainapp
 from django.conf import settings
 from django.conf.urls.static import static
 
-urlpatterns = [path("admin/", admin.site.urls), path("", mainapp.index, name="index")]
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("", mainapp.index, name="index"),
+    path("<slug:slug>", mainapp.index, name="any"),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
