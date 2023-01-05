@@ -1,24 +1,28 @@
-{% load draw %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% draw_menu "main_menu" as menu %}
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        {% for style in menu.styles %}
-            {{ style }}
-        {% endfor %}
-    </style>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-{% autoescape on %}
-{{ menu.menu|safe }}
-{% endautoescape %}
-<div><p style="font-family: Algerian, sans-serif">{{ title }}</p></div>
+{% include 'mainapp/includes/menu.html' %}
+{% block content %}
+{% endblock %}
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+
+        $("a").each(function () {
+            if (window.location.pathname.indexOf($(this).attr("href")) !== -1) {
+                $(this).css("text-decoration", "underline");
+            } else
+                $(this).css("text-decoration", "none");
+        });
+    });
+</script>
 </body>
 </html>

@@ -22,7 +22,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", mainapp.index, name="index"),
-    path("<slug:slug>", mainapp.index, name="any"),
+    path("<slug:item>/", mainapp.any_url, name="any"),
+    path("<slug:item>/<slug:link>/", mainapp.any_url2, name="any2"),
+    path("<slug:item>/<slug:link>/<slug:sublink>", mainapp.any_url3, name="any3"),
 ]
 
 if settings.DEBUG:
