@@ -8,8 +8,12 @@ from django.http import HttpResponseServerError
 register = template.Library()
 
 
+# функция собирающая html для меню
 def html(menu_items, menu_html):
+    # проход по всем элементам меню
     for item in menu_items:
+        # если dropdown атрибут is False (означает что этот элемент меню не будет в dropdown'е),
+        # то сформировать обычный элемент меню
         if item.dropdown is False:
             menu_html += format_html(
                 '<li><a href="{}" class="{}">{}</a>',
@@ -17,6 +21,9 @@ def html(menu_items, menu_html):
                 item.classes,
                 item.name,
             )
+
+            # если элемент меню имеет связанные dropdown элементы, добавить <ul> элемент,
+            # пройтись по ним в цикле и сформировать html
             if item.dropdown_links.all():
                 menu_html += "<ul>"
                 for link in item.dropdown_links.all():
@@ -26,7 +33,12 @@ def html(menu_items, menu_html):
                         link.classes,
                         link.name,
                     )
+
+                    # переменная нужна чтобы добавить <ul> элемент только один раз
                     ul_sub = False
+
+                    # если у dropdown элемента также есть dropdown элементы, добавить <ul> элемент один раз,
+                    # пройтись по ним в цикле и сформировать html
                     for sublink in link.dropdown_links.all():
                         if sublink.dropdown is True:
                             if not ul_sub:
@@ -45,6 +57,7 @@ def html(menu_items, menu_html):
                                 sublink.classes,
                                 sublink.name,
                             )
+                    # добавление закрывающих тегов
                     if len(link.dropdown_links.all()) > 1:
                         menu_html += "</ul>"
                     menu_html += "</li>"
@@ -54,18 +67,26 @@ def html(menu_items, menu_html):
 
 @register.simple_tag
 def draw_menu(name):
+    # проверка есть ли меню в БД и есть ли у меню лого
     try:
+        # Делается только один запрос к БД с помощью prefetch_related
         menu = MenuGroup.objects.prefetch_related("menu_items", "logo").get(name=name)
         logo = menu.logo.get()
     except (MenuGroup.DoesNotExist, Logo.DoesNotExist):
         return HttpResponseServerError()
+
+    # элементы меню
     menu_items = menu.menu_items.all()
+
     menu_html = f'<div class="{menu.classes}">'
-    menu_html += "<ul sdsd>"
+    menu_html += "<ul>"
+
+    # logo
     menu_html += (
         f'<li><img src="{logo.logo.url}" class="{logo.classes}" alt="logo"></li>'
     )
 
+    # вызов функции собирающей html для меню
     menu_html = html(menu_items, menu_html)
 
     menu_html += "</ul></div>"

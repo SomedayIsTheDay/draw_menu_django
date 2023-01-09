@@ -12,6 +12,8 @@
     left: 0;
     right: 0;
     margin: auto;
+    font-family: Algerian, sans-serif;
+    text-align: center
 }
 
 .menu {
