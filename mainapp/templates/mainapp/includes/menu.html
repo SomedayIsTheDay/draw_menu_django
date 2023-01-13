@@ -1,3 +1,6 @@
 {% load draw %}
+{% load cache %}
 
-{% draw_menu 'main_menu' %}
+{% cache 3600 'menu' %}
+    {% draw_menu 'main_menu' %}
+{% endcache %}
